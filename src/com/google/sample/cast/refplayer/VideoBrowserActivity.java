@@ -16,6 +16,7 @@
 
 package com.google.sample.cast.refplayer;
 
+import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastContext;
 import com.google.sample.cast.refplayer.settings.CastPreference;
 
@@ -34,6 +35,8 @@ public class VideoBrowserActivity extends AppCompatActivity {
     private boolean mIsHoneyCombOrAbove = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
     private Toolbar mToolbar;
     private CastContext mCastContext;
+    private MenuItem mediaRouteMenuItem;
+
     /*
      * (non-Javadoc)
      * @see android.support.v4.app.FragmentActivity#onCreate(android.os.Bundle)
@@ -44,7 +47,7 @@ public class VideoBrowserActivity extends AppCompatActivity {
         setContentView(R.layout.video_browser);
         setupActionBar();
 
-        mCastContext = CastContext.getSharedInstance(this);
+        //mCastContext = CastContext.getSharedInstance(this);
     }
 
     private void setupActionBar() {
@@ -57,6 +60,8 @@ public class VideoBrowserActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.browse, menu);
+        mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(getApplicationContext(), menu, R.id.media_route_menu_item);
+
         return true;
     }
 
