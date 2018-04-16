@@ -77,12 +77,6 @@ public class VideoBrowserFragment extends Fragment implements VideoListAdapter.I
         mRecyclerView.setAdapter(mAdapter);
         getLoaderManager().initLoader(0, null, this);
 
-
-        Parent mParent = new Gson().fromJson(Utils.json, Parent.class);
-
-        System.out.println("ohgljgh");
-
-
     }
 
     @Override

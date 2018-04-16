@@ -16,12 +16,21 @@
 
 package com.google.sample.cast.refplayer.browser;
 
+import com.google.gson.Gson;
+import com.google.sample.cast.refplayer.model.Group;
+import com.google.sample.cast.refplayer.model.Parent;
+import com.google.sample.cast.refplayer.model.Station;
 import com.google.sample.cast.refplayer.utils.MediaItem;
+import com.google.sample.cast.refplayer.utils.Utils;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
+import android.widget.Toast;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class VideoItemLoader extends AsyncTaskLoader<List<MediaItem>> {
@@ -37,13 +46,33 @@ public class VideoItemLoader extends AsyncTaskLoader<List<MediaItem>> {
     @Override
     public List<MediaItem> loadInBackground() {
         try {
-            return VideoProvider.buildMedia(mUrl);
+            //return VideoProvider.buildMedia(mUrl);
+
+            Parent mParent = new Gson().fromJson(Utils.json, Parent.class);
+            List<MediaItem> mediaList = new ArrayList<>();
+            List<Group> results = mParent.getGroups();
+
+            for(Group group : results){
+                if (group.getStations()!=null) {
+                    for (Station station : group.getStations()) {
+                        MediaItem mi = new MediaItem();
+
+                        mi.setTitle(station.getName());
+                        mi.setUrl(station.getUrl());
+                        mi.addImage(station.getImage());
+
+                        mediaList.add(mi);
+                    }
+                }
+            }
+
+            //return VideoProvider.buildMedia(mUrl);
+            return mediaList;
         } catch (Exception e) {
             Log.e(TAG, "Failed to fetch media data", e);
             return null;
         }
     }
-
     @Override
     protected void onStartLoading() {
         super.onStartLoading();
