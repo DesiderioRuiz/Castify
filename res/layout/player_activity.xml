@@ -65,6 +65,14 @@
         android:visibility="visible"
         android:background="@drawable/player_bg_gradient_dark" >
 
+        <fragment
+            android:id="@+id/castMiniController"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
+            class="com.google.android.gms.cast.framework.media.widget.MiniControllerFragment"/>
+
         <ProgressBar
                 android:id="@+id/progressBar1"
                 style="?android:attr/progressBarStyleLarge"
