@@ -6,6 +6,8 @@ public class Station {
     private String url;
     private String referer;
     private Boolean embed;
+    private String userAgent;
+    private Boolean isHost;
 
     public String getName() {
         return name;
@@ -45,5 +47,21 @@ public class Station {
 
     public void setEmbed(Boolean embed) {
         this.embed = embed;
+    }
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
+
+    public Boolean getHost() {
+        return isHost;
+    }
+
+    public void setHost(Boolean host) {
+        isHost = host;
     }
 }

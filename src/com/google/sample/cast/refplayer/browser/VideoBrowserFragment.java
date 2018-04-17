@@ -25,8 +25,10 @@ import com.google.sample.cast.refplayer.utils.MediaItem;
 import com.google.sample.cast.refplayer.utils.Utils;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -38,18 +40,25 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.EFragment;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.util.List;
 
 /**
  * A fragment to host a list view of the video catalog.
  */
+@EFragment
 public class VideoBrowserFragment extends Fragment implements VideoListAdapter.ItemClickListener,
         LoaderManager.LoaderCallbacks<List<MediaItem>> {
 
     private static final String TAG = "VideoBrowserFragment";
     private static final String CATALOG_URL =
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/f.json";
+            "http://www.achotv.com/listas/achotv2018.m3u8";
     private RecyclerView mRecyclerView;
     private VideoListAdapter mAdapter;
     private View mEmptyView;
@@ -81,6 +90,38 @@ public class VideoBrowserFragment extends Fragment implements VideoListAdapter.I
 
     @Override
     public void itemClicked(View view, MediaItem item, int position) {
+
+
+
+
+
+        if (item.getUrl().contains(".m3u8")) {
+            startVideoActivity(item, position);
+        }else {
+            //En segundo plano, es decir, con un AsyncTask o sucedaneo
+            // obtenemos el html de la web. Esto lo hacemos con la librería jsoup.
+            processDataBackground(item, position);
+            // Una vez que tenemos el html, buscamos el texto correspondiente a .m3u8
+            //Cuando tengamos el m3u8, se lo pasamos al activity
+
+        }
+
+    }
+
+    @Background
+    public void processDataBackground(MediaItem item, int position){
+        try {
+            Document doc = Jsoup.connect(item.getUrl()).get();
+
+            System.out.println("ola k ase");
+
+        } catch (Exception e){
+            Toast.makeText(getContext(), "Ups, ha ocurrido un problema", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @UiThread
+    public void startVideoActivity(MediaItem item, int position){
         String transitionName = getString(R.string.transition_image);
         VideoListAdapter.ViewHolder viewHolder =
                 (VideoListAdapter.ViewHolder) mRecyclerView.findViewHolderForPosition(position);
